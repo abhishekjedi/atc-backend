@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Airport {
+  code        String   @id
+  name        String
+  timezone    String
+  lat         Float
+  lng         Float
+  runways     Runway[]
+  flights     Flight[]
+}
+
+model Runway {
+  id             String   @id
+  airportCode    String
+  status         RunwayStatus @default(available)
+  capacityPerHour Int
+  coolOffSeconds Int
+  lastResetAt    DateTime @default(now())
+  currentCount   Int      @default(0)
+
+  airport        Airport  @relation(fields: [airportCode], references: [code])
+  assignments    Assignment[]
+}
+
+model Flight {
+  flightId        String   @id
+  airportCode     String
+  origin          String?
+  destination     String?
+  priority        Int // 1 for normal, 2 for emergency
+  status          FlightStatus
+  requestedAt     DateTime
+  queuePosition   Int
+  assignedRunwayId String?
+  assignedAt      DateTime?
+  landedAt        DateTime?
+
+  airport         Airport @relation(fields: [airportCode], references: [code])
+  assignment      Assignment?
+}
+
+model Assignment {
+  id        Int      @id @default(autoincrement())
+  flightId  String   @unique
+  runwayId  String
+  assignedAt DateTime @default(now())
+
+  flight    Flight   @relation(fields: [flightId], references: [flightId])
+  runway    Runway   @relation(fields: [runwayId], references: [id])
+}
+
+enum RunwayStatus {
+  available
+  maintenance
+  cooling_off
+}
+
+enum FlightStatus {
+  normal
+  emergency
+}

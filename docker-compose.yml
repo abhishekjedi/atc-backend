@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  backend:
+    build: .
+    container_name: atc-backend
+    restart: unless-stopped
+    ports:
+      - "${PORT}:3000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      RABBITMQ_URI: ${RABBITMQ_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      NODE_ENV: production
+    depends_on:
+      - mysql
+      - rabbitmq
+    networks:
+      - atc-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: atc-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - atc-net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: atc-rabbitmq
+    restart: unless-stopped
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    networks:
+      - atc-net
+
+volumes:
+  mysql_data:
+
+networks:
+  atc-net:
