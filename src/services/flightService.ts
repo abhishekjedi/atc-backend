@@ -24,7 +24,7 @@ const FlightService = {
         if (!flight || flight.airportCode !== airportCode || flight.assignedRunwayId !== null) {
             return { position: null, waitTime: 0 };
         }
-        const position = FlightDataprovider.getFlightPosition(flight);
+        const position = await FlightDataprovider.getFlightPosition(flight);
         return {
             position: position + 1,
             waitTime: (position + 1) * 40 // Assuming each position corresponds to 40 seconds wait time

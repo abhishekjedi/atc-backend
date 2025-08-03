@@ -13,6 +13,9 @@ const RunWayService = {
     },
     async changeRunwayStatus(id: string, airportCode: string, status: RunwayStatus) {
         return RunwayDP.changeRunwayStatus(id, airportCode, status);
+    },
+    async getAllRunways(airportCode: string) {
+        return RunwayDP.getAllRunways(airportCode);
     }   
 };
 

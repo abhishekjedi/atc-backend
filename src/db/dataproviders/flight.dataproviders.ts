@@ -89,26 +89,31 @@ const FlightDataprovider = {
 
     getFlightPosition: (flight: Flight) => {
         const airportCode = flight.airportCode;
-        const condition =
-            flight.status === 'emergency'
-                ? {
-                    airportCode,
-                    assignedRunwayId: null,
-                    status: 'emergency',
-                    queuePosition: { lt: flight.queuePosition },
-                }
-                : {
-                    airportCode,
-                    assignedRunwayId: null,
-                    OR: [
-                        { status: 'emergency' },
-                        {
-                            status: 'normal',
-                            queuePosition: { lt: flight.queuePosition },
-                        },
-                    ],
-                };
-
+        let condition: any;
+        if (flight.status === 'emergency') {
+            condition = {
+                airportCode,
+                assignedRunwayId: null,
+                status: 'emergency',
+                queuePosition: { lt: flight.queuePosition },
+            };
+        } else {
+            condition = {
+                OR: [
+                    {
+                        airportCode,
+                        assignedRunwayId: null,
+                        status: 'emergency',
+                    },
+                    {
+                        airportCode,
+                        assignedRunwayId: null,
+                        status: 'normal',
+                        queuePosition: { lt: flight.queuePosition },
+                    },
+                ],
+            };
+        }
         return prisma.flight.count({ where: condition });
     },
 

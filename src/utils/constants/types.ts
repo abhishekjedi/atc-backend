@@ -1,11 +1,10 @@
 export type Airport = {
-    airportCode: string;
+    code: string;
     name: string;
     timezone: string;
-    location: {
-        latitude: number;
-        longitude: number;
-    };
+    lat: number;
+    lng: number;
+    
 }
 
 export type FlightStatus = 'normal' | 'emergency';
@@ -26,7 +25,7 @@ export type Flight = {
 export type RunWayRequest = {
     id: string;
     capacityPerHour: number;
-    coolOfSeconds: number;
+    coolOffSeconds: number;
     airportCode: string;
 };
 
@@ -34,7 +33,7 @@ export type Runway = {
     id: string;
     airportCode: string;
     capacityPerHour: number;
-    coolOfSeconds: number;
+    coolOffSeconds: number;
     lastResetAt: Date;
     currentCount: number;
     status: RunwayStatus;

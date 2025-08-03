@@ -4,13 +4,13 @@ import { RunwayStatus } from "../../utils/constants/types";
 
 const RunwayController = {
     addRunWay : async (req: Request, res: Response) => {
-        const {id,capacityPerHour, coolOfSeconds} = req.body;
+        const {id,capacityPerHour, coolOffSeconds} = req.body;
         const airportCode = req.params.airportCode;
         try{
             await RunWayService.addRunWay({
                 id,
                 capacityPerHour,
-                coolOfSeconds,
+                coolOffSeconds,
                 airportCode
             });
             return res.status(200).json({
@@ -54,6 +54,19 @@ const RunwayController = {
             });
         }catch(err){
             console.error("Error changing runway status:", err);
+            return res.status(500).json({
+                message: "Internal server error",
+            });
+        }
+    },
+
+    getAllRunways: async (req: Request, res: Response) => {
+        const airportCode = req.params.airportCode;
+        try{
+            const runways = await RunWayService.getAllRunways(airportCode);
+            return res.status(200).json(runways);
+        }catch(err){
+            console.error("Error fetching runways:", err);
             return res.status(500).json({
                 message: "Internal server error",
             });

@@ -3,9 +3,11 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
+# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
 
+# Copy all source code and build
 COPY . .
 RUN npm run build
 
@@ -14,15 +16,18 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Install only production dependencies
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
+# Copy built files and Prisma schema
 COPY --from=builder /app/dist ./dist
 COPY prisma ./prisma
 
-# Generate Prisma Client
+# Generate Prisma client
 RUN npx prisma generate
 
 ENV NODE_ENV=production
 
-CMD ["node", "dist/index.js"]
+# Run app (migrate + start)
+CMD sh -c "npx prisma migrate deploy && node dist/index.js"

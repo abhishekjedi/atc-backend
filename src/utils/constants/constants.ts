@@ -9,3 +9,5 @@ const CONSTANTS = {
         SERVICE: 'service',
     }
 }
+
+export default CONSTANTS;

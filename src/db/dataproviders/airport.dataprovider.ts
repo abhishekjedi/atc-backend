@@ -2,7 +2,7 @@ import { prisma } from "../..";
 import { Airport } from "../../utils/constants/types";
 
 const AirportDP = {
-    addAirport: async (airport: Airport) => {
+    addAirport: async (airport: any) => {
         return prisma.airport.create({
             data: airport
         });

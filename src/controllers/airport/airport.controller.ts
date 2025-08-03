@@ -6,19 +6,18 @@ import MetricService from "../../services/metricService";
 const AirportController = {
     addAirport: async (req: Request, res: Response) => {
       try{
-        const { airportCode, name, timezone, location = {} } = req.body;
+        const { code, name, timezone, location = {} } = req.body;
         const { latitude, longitude } = location;
-        if (!airportCode || !name || !timezone || !latitude || !longitude) {
+        console.log("Adding airport:", { code, name, timezone, latitude, longitude });
+        if (!code || !name || !timezone || !latitude || !longitude) {
             return res.status(400).json({ message: "Missing required fields" });
         }
         const airport: Airport = {
-            airportCode,
+            code,
             name,
             timezone,
-            location: {
-                latitude: parseFloat(latitude),
-                longitude: parseFloat(longitude)
-            }
+            lat: latitude,
+            lng: longitude,
         };
         await AirportService.addAirport(airport);
         return res.status(201).json({ message: `Airport ${name} added successfully` });

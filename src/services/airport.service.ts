@@ -3,7 +3,7 @@ import AirportDP from "../db/dataproviders/airport.dataprovider";
 
 const AirportService = {
     addAirport: async (airport: Airport) => {
-        console.log(`Adding airport: ${airport.name} with code: ${airport.airportCode}`);
+        console.log(`Adding airport: ${airport.name} with code: ${airport.code}`);
         await AirportDP.addAirport(airport);
         return { message: `Airport ${airport.name} added successfully` };
     },

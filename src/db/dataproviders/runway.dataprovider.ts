@@ -8,7 +8,7 @@ const RunwayDP = {
                 id: req.id,
                 airportCode : req.airportCode,
                 capacityPerHour: req.capacityPerHour,
-                coolOffSeconds : req.coolOfSeconds,
+                coolOffSeconds : req.coolOffSeconds,
                 lastResetAt: new Date(),
                 currentCount: 0,
             },
@@ -34,6 +34,12 @@ const RunwayDP = {
             data: {
                 status: status,
             },
+        });
+    },
+
+    getAllRunways: async (airportCode: string) => {
+        return prisma.runway.findMany({
+            where: { airportCode: airportCode },
         });
     }
 }

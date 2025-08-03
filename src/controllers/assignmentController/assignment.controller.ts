@@ -4,7 +4,8 @@ import AssignmentService from "../../services/assignment.service";
 const AssignmentController = {
     assignNextFlightToRunway: async (req: Request, res: Response) => {
         try {
-            const { airportCode, runwayId } = req.params;
+            const { airportCode } = req.params;
+            const { runwayId } = req.body;
             if (!airportCode || !runwayId) {
                 return res.status(400).json({ message: "Airport code and runway ID are required" });
             }
